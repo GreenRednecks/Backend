@@ -8,6 +8,7 @@ const app = express()
 // }
 
 app.use(cors())  //cors(corsOptions) // set options for disable unallowd origin
+//test
 
 
 const bodyParser = require('body-parser')
