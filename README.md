@@ -20,5 +20,5 @@ npm install
 ```
 - Start the server:
 ```
-node index.js
+node server.js
 ```
