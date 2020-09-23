@@ -2,6 +2,7 @@ const Egg = require('../models/egg.model.js');
 
 // Create and Save a new Egg
 exports.create = (req, res) => {
+    // console.log("aufgerufen")
     // Validate request
     if(!req.body.amount) {
         return res.status(400).send({
@@ -31,6 +32,51 @@ exports.findAll = (req, res) => {
     .then(eggs => {
         res.send(eggs);
     }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving eggs."
+        });
+    });
+};
+
+
+// Retrieve and return all Eggs from the database of Today.
+exports.findAllofToday = (req, res) => {
+    Egg.find()
+    .then(eggs => {
+        let date = new Date();
+        let eggsOfToday = [];
+        for(let i = 0; i < eggs.length; i++){
+            if (eggs[i].createdAt.getFullYear() === date.getFullYear() && eggs[i].createdAt.getMonth() === date.getMonth() && eggs[i].createdAt.getDate() === date.getDate()){
+                console.log("ei von heute gefunden!!");
+                eggsOfToday.push(eggs[i]);
+
+            }
+        }
+
+        res.send(eggsOfToday);
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving eggs."
+        });
+    });
+};
+
+
+//returns the egg amount of today
+exports.findAmountofToday = (req, res) => {
+    Egg.find()
+        .then(eggs => {
+            let date = new Date();
+            let eggsOfToday = [];
+            let amount = 0;
+            for(let i = 0; i < eggs.length; i++){
+                if (eggs[i].createdAt.getFullYear() === date.getFullYear() && eggs[i].createdAt.getMonth() === date.getMonth() && eggs[i].createdAt.getDate() === date.getDate()){
+                    amount += Number(eggs[i].amount);
+                }
+            }
+
+            res.send(amount + "");
+        }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving eggs."
         });
