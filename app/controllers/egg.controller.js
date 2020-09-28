@@ -62,15 +62,78 @@ exports.findAllofToday = (req, res) => {
 };
 
 
+// Retrieve and return all Eggs from the database of yesterday
+exports.findAllofYesterday = (req, res) => {
+    Egg.find()
+    .then(eggs => {
+        let dateOfYesterday = new Date();
+        dateOfYesterday.setDate(dateOfYesterday.getDate() - 1);
+        let eggsOfYesterday = [];
+        for(let i = 0; i < eggs.length; i++){
+            if (eggs[i].createdAt.getFullYear() === dateOfYesterday.getFullYear() && eggs[i].createdAt.getMonth() === dateOfYesterday.getMonth() && eggs[i].createdAt.getDate() === dateOfYesterday.getDate()){
+                // console.log("ei von gestern gefunden!!");
+                eggsOfYesterday.push(eggs[i]);
+
+            }
+        }
+
+        res.send(eggsOfYesterday);
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving eggs."
+        });
+    });
+};
+
+
+//returns the egg amount of All
+exports.findAllAmount = (req, res) => {
+    Egg.find()
+        .then(eggs => {
+            let amount = 0;
+            for(let i = 0; i < eggs.length; i++){
+                amount += Number(eggs[i].amount);
+            }
+
+            res.send(amount + "");
+        }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving eggs."
+        });
+    });
+};
+
+
 //returns the egg amount of today
 exports.findAmountofToday = (req, res) => {
     Egg.find()
         .then(eggs => {
             let date = new Date();
-            let eggsOfToday = [];
             let amount = 0;
             for(let i = 0; i < eggs.length; i++){
                 if (eggs[i].createdAt.getFullYear() === date.getFullYear() && eggs[i].createdAt.getMonth() === date.getMonth() && eggs[i].createdAt.getDate() === date.getDate()){
+                    amount += Number(eggs[i].amount);
+                }
+            }
+
+            res.send(amount + "");
+        }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving eggs."
+        });
+    });
+};
+
+
+//returns the egg amount of yesterday
+exports.findAmountofYesterday = (req, res) => {
+    Egg.find()
+        .then(eggs => {
+            let dateOfYesterday = new Date();
+            dateOfYesterday.setDate(dateOfYesterday.getDate() - 1);
+            let amount = 0;
+            for(let i = 0; i < eggs.length; i++){
+                if (eggs[i].createdAt.getFullYear() === dateOfYesterday.getFullYear() && eggs[i].createdAt.getMonth() === dateOfYesterday.getMonth() && eggs[i].createdAt.getDate() === dateOfYesterday.getDate()){
                     amount += Number(eggs[i].amount);
                 }
             }
